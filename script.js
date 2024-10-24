@@ -2,8 +2,10 @@ let points = 0;
 let pointsPerClick = 1;
 let autoClickerActive = false;
 let autoClickerInterval;
+let autoClickerRate = 0; // Auto-Clicker Points/second
 let multiplier = 1;
 let multiplierActive = false;
+let challengeActive = false;
 
 // Function to update the points display
 function updatePointsDisplay() {
@@ -18,15 +20,16 @@ document.getElementById("clicker-btn").addEventListener("click", () => {
 });
 
 // Function to buy upgrades
-function buyUpgrade(upgradeCost, pointsIncrement, upgradeIndex, duration = 0) {
+function buyUpgrade(upgradeCost, pointsIncrement, autoClickerIncrement, duration = 0, upgradeIndex) {
     if (points >= upgradeCost) {
         points -= upgradeCost;
         if (duration > 0) {
             activateMultiplier(duration);
         } else {
             pointsPerClick += pointsIncrement;
+            autoClickerRate += autoClickerIncrement;
             updatePointsDisplay();
-            document.getElementById(`cost${upgradeIndex}`).innerText = Math.floor(upgradeCost * 1.5); // Increase cost for next upgrade
+            document.getElementById(`cost${upgradeIndex}`).innerText = Math.floor(upgradeCost * 1.75); // Increase cost for next upgrade
         }
     } else {
         alert("Not enough points!");
@@ -34,58 +37,17 @@ function buyUpgrade(upgradeCost, pointsIncrement, upgradeIndex, duration = 0) {
 }
 
 // Event listeners for upgrade buttons
-document.getElementById("btn1").addEventListener("click", () => buyUpgrade(10, 1, 1));
-document.getElementById("btn2").addEventListener("click", () => buyUpgrade(50, 5, 2));
-document.getElementById("btn3").addEventListener("click", () => {
-    if (points >= 100 && !autoClickerActive) {
-        points -= 100;
-        autoClickerActive = true;
-        updatePointsDisplay();
-        startAutoClicker();
-        document.getElementById("cost3").innerText = "Maxed Out"; // Change the button text after purchase
-        document.getElementById("btn3").disabled = true; // Disable the button
-    } else {
-        alert("Not enough points or already purchased!");
-    }
-});
-document.getElementById("btn4").addEventListener("click", () => buyUpgrade(150, 0, 4, 10)); // Double Points Upgrade
-document.getElementById("btn5").addEventListener("click", () => buyUpgrade(200, 0, 5)); // Point Multiplier Upgrade
+document.getElementById("btn1").addEventListener("click", () => buyUpgrade(10, 1, 0, 0, 1));
+document.getElementById("btn2").addEventListener("click", () => buyUpgrade(50, 5, 0, 0, 2));
+document.getElementById("btn3").addEventListener("click", () => buyUpgrade(100, 0, 1, 0, 3));
+document.getElementById("btn4").addEventListener("click", () => buyUpgrade(150, 0, 0, 10, 4));
+document.getElementById("btn5").addEventListener("click", () => buyUpgrade(500, 10, 0, 0, 5));
+document.getElementById("btn6").addEventListener("click", () => buyUpgrade(1000, 0, 5, 0, 6));
+document.getElementById("btn7").addEventListener("click", () => buyUpgrade(2500, 0, 0, 15, 7)); // Triple Points for 15s
+document.getElementById("btn8").addEventListener("click", () => buyUpgrade(5000, 25, 0, 0, 8));
+document.getElementById("btn9").addEventListener("click", () => buyUpgrade(10000, 0, 10, 0, 9));
+document.getElementById("btn10").addEventListener("click", () => buyUpgrade(50000, 100, 0, 0, 10)); // Final upgrade
 
 // Function to activate multiplier
 function activateMultiplier(duration) {
-    if (!multiplierActive) {
-        multiplierActive = true;
-        multiplier *= 2; // Double the multiplier
-        updatePointsDisplay();
-        setTimeout(() => {
-            multiplier /= 2; // Revert multiplier after duration
-            multiplierActive = false;
-            updatePointsDisplay();
-        }, duration * 1000);
-    } else {
-        alert("Multiplier is already active!");
-    }
-}
-
-// Function to start auto-clicker
-function startAutoClicker() {
-    autoClickerInterval = setInterval(() => {
-        points += 1;
-        updatePointsDisplay();
-    }, 1000);
-}
-
-// Reset the game function
-document.getElementById("reset-btn").addEventListener("click", resetGame);
-
-function resetGame() {
-    points = 0;
-    pointsPerClick = 1;
-    autoClickerActive = false;
-    multiplier = 1;
-    multiplierActive = false;
-    clearInterval(autoClickerInterval);
-    updatePointsDisplay();
-    document.getElementById("btn3").disabled = false; // Enable auto-clicker button again
-    document.getElementById("cost3").innerText = 100; // Reset cost
-}
+    if (!mult
