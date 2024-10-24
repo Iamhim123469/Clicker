@@ -31,6 +31,7 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 #clicker-btn:hover {
@@ -56,6 +57,7 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .upgrade-btn:hover {
@@ -64,4 +66,19 @@ h1 {
 
 .cost {
     font-weight: bold;
+}
+
+#reset-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #FF4136;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#reset-btn:hover {
+    background-color: #d12e25;
 }
