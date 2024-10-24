@@ -11,6 +11,7 @@
         <h1>Tech Clicker Game</h1>
         <div class="points-display">
             <h2>Points: <span id="points">0</span></h2>
+            <h3>Multiplier: <span id="multiplier">1</span>x</h3>
             <button id="clicker-btn">💻 Click for Points!</button>
         </div>
         <div class="upgrades">
@@ -30,7 +31,18 @@
                 <p>Cost: <span class="cost" id="cost3">100</span> Points</p>
                 <button class="upgrade-btn" id="btn3">Buy Upgrade</button>
             </div>
+            <div class="upgrade" id="upgrade4">
+                <h4>Upgrade 4: Double Points for 10 seconds</h4>
+                <p>Cost: <span class="cost" id="cost4">150</span> Points</p>
+                <button class="upgrade-btn" id="btn4">Buy Upgrade</button>
+            </div>
+            <div class="upgrade" id="upgrade5">
+                <h4>Upgrade 5: +1 Point Multiplier</h4>
+                <p>Cost: <span class="cost" id="cost5">200</span> Points</p>
+                <button class="upgrade-btn" id="btn5">Buy Upgrade</button>
+            </div>
         </div>
+        <button id="reset-btn">Reset Game</button>
     </div>
     <script src="script.js"></script>
 </body>
