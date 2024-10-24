@@ -2,25 +2,33 @@ let points = 0;
 let pointsPerClick = 1;
 let autoClickerActive = false;
 let autoClickerInterval;
+let multiplier = 1;
+let multiplierActive = false;
 
 // Function to update the points display
 function updatePointsDisplay() {
     document.getElementById("points").innerText = points;
+    document.getElementById("multiplier").innerText = multiplier;
 }
 
 // Function to handle the click button
 document.getElementById("clicker-btn").addEventListener("click", () => {
-    points += pointsPerClick;
+    points += pointsPerClick * multiplier;
     updatePointsDisplay();
+    playClickSound();  // Play sound on click
 });
 
 // Function to buy upgrades
-function buyUpgrade(upgradeCost, pointsIncrement, upgradeIndex) {
+function buyUpgrade(upgradeCost, pointsIncrement, upgradeIndex, duration = 0) {
     if (points >= upgradeCost) {
         points -= upgradeCost;
-        pointsPerClick += pointsIncrement;
-        updatePointsDisplay();
-        document.getElementById(`cost${upgradeIndex}`).innerText = Math.floor(upgradeCost * 1.5); // Increase cost for next upgrade
+        if (duration > 0) {
+            activateMultiplier(duration);
+        } else {
+            pointsPerClick += pointsIncrement;
+            updatePointsDisplay();
+            document.getElementById(`cost${upgradeIndex}`).innerText = Math.floor(upgradeCost * 1.5); // Increase cost for next upgrade
+        }
     } else {
         alert("Not enough points!");
     }
@@ -41,6 +49,24 @@ document.getElementById("btn3").addEventListener("click", () => {
         alert("Not enough points or already purchased!");
     }
 });
+document.getElementById("btn4").addEventListener("click", () => buyUpgrade(150, 0, 4, 10)); // Double Points Upgrade
+document.getElementById("btn5").addEventListener("click", () => buyUpgrade(200, 0, 5)); // Point Multiplier Upgrade
+
+// Function to activate multiplier
+function activateMultiplier(duration) {
+    if (!multiplierActive) {
+        multiplierActive = true;
+        multiplier *= 2; // Double the multiplier
+        updatePointsDisplay();
+        setTimeout(() => {
+            multiplier /= 2; // Revert multiplier after duration
+            multiplierActive = false;
+            updatePointsDisplay();
+        }, duration * 1000);
+    } else {
+        alert("Multiplier is already active!");
+    }
+}
 
 // Function to start auto-clicker
 function startAutoClicker() {
@@ -50,25 +76,20 @@ function startAutoClicker() {
     }, 1000);
 }
 
-// Reset the game function (optional)
+// Function to play click sound (ensure you have the sound file)
+function playClickSound() {
+    const clickSound = new Audio('assets/click.mp3'); // Path to your sound file
+    clickSound.play();
+}
+
+// Reset the game function
 function resetGame() {
     points = 0;
     pointsPerClick = 1;
     autoClickerActive = false;
+    multiplier = 1;
+    multiplierActive = false;
     clearInterval(autoClickerInterval);
     updatePointsDisplay();
     document.getElementById("btn3").disabled = false; // Enable auto-clicker button again
-}
-
-// Optional: Reset button for testing purposes
-const resetBtn = document.createElement("button");
-resetBtn.innerText = "Reset Game";
-resetBtn.style.marginTop = "20px";
-resetBtn.style.padding = "10px 20px";
-resetBtn.style.backgroundColor = "#FF4136";
-resetBtn.style.color = "white";
-resetBtn.style.border = "none";
-resetBtn.style.borderRadius = "5px";
-resetBtn.style.cursor = "pointer";
-resetBtn.addEventListener("click", resetGame);
-document.body.appendChild(resetBtn);
+    document.getElementById("cost3").innerText = 100; // Reset cost
