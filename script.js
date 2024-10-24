@@ -1,56 +1,74 @@
-let score = 0; // Initial score
-let pointsPerClick = 1; // Points earned per click
+let points = 0;
+let pointsPerClick = 1;
+let autoClickerActive = false;
+let autoClickerInterval;
 
-// Function to update the displayed score and points per click
-function updateDisplay() {
-    document.getElementById("score").innerText = score; // Update score display
-    document.getElementById("pointsPerClick").innerText = pointsPerClick; // Update points per click display
+// Function to update the points display
+function updatePointsDisplay() {
+    document.getElementById("points").innerText = points;
 }
 
-// Initial display update
-updateDisplay();
-
-// Get the click button element
-const button = document.getElementById("clickButton");
-
-// Event listener for button clicks
-button.addEventListener("click", () => {
-    score += pointsPerClick; // Increase score by points per click
-    updateDisplay(); // Update displayed score
+// Function to handle the click button
+document.getElementById("clicker-btn").addEventListener("click", () => {
+    points += pointsPerClick;
+    updatePointsDisplay();
 });
 
-// Upgrade buttons
-const upgrade1 = document.getElementById("upgrade1");
-const upgrade2 = document.getElementById("upgrade2");
-const upgrade3 = document.getElementById("upgrade3");
-
-// Event listeners for upgrades
-upgrade1.addEventListener("click", () => {
-    if (score >= 10) {
-        score -= 10; // Deduct cost
-        pointsPerClick += 1; // Increase points per click
-        updateDisplay(); // Update displayed score
+// Function to buy upgrades
+function buyUpgrade(upgradeCost, pointsIncrement, upgradeIndex) {
+    if (points >= upgradeCost) {
+        points -= upgradeCost;
+        pointsPerClick += pointsIncrement;
+        updatePointsDisplay();
+        document.getElementById(`cost${upgradeIndex}`).innerText = Math.floor(upgradeCost * 1.5); // Increase cost for next upgrade
     } else {
-        alert("Not enough points for Upgrade 1!");
+        alert("Not enough points!");
+    }
+}
+
+// Event listeners for upgrade buttons
+document.getElementById("btn1").addEventListener("click", () => buyUpgrade(10, 1, 1));
+document.getElementById("btn2").addEventListener("click", () => buyUpgrade(50, 5, 2));
+document.getElementById("btn3").addEventListener("click", () => {
+    if (points >= 100 && !autoClickerActive) {
+        points -= 100;
+        autoClickerActive = true;
+        updatePointsDisplay();
+        startAutoClicker();
+        document.getElementById("cost3").innerText = "Maxed Out"; // Change the button text after purchase
+        document.getElementById("btn3").disabled = true; // Disable the button
+    } else {
+        alert("Not enough points or already purchased!");
     }
 });
 
-upgrade2.addEventListener("click", () => {
-    if (score >= 50) {
-        score -= 50; // Deduct cost
-        pointsPerClick += 5; // Increase points per click
-        updateDisplay(); // Update displayed score
-    } else {
-        alert("Not enough points for Upgrade 2!");
-    }
-});
+// Function to start auto-clicker
+function startAutoClicker() {
+    autoClickerInterval = setInterval(() => {
+        points += 1;
+        updatePointsDisplay();
+    }, 1000);
+}
 
-upgrade3.addEventListener("click", () => {
-    if (score >= 100) {
-        score -= 100; // Deduct cost
-        pointsPerClick += 10; // Increase points per click
-        updateDisplay(); // Update displayed score
-    } else {
-        alert("Not enough points for Upgrade 3!");
-    }
-});
+// Reset the game function (optional)
+function resetGame() {
+    points = 0;
+    pointsPerClick = 1;
+    autoClickerActive = false;
+    clearInterval(autoClickerInterval);
+    updatePointsDisplay();
+    document.getElementById("btn3").disabled = false; // Enable auto-clicker button again
+}
+
+// Optional: Reset button for testing purposes
+const resetBtn = document.createElement("button");
+resetBtn.innerText = "Reset Game";
+resetBtn.style.marginTop = "20px";
+resetBtn.style.padding = "10px 20px";
+resetBtn.style.backgroundColor = "#FF4136";
+resetBtn.style.color = "white";
+resetBtn.style.border = "none";
+resetBtn.style.borderRadius = "5px";
+resetBtn.style.cursor = "pointer";
+resetBtn.addEventListener("click", resetGame);
+document.body.appendChild(resetBtn);
