@@ -15,7 +15,6 @@ function updatePointsDisplay() {
 document.getElementById("clicker-btn").addEventListener("click", () => {
     points += pointsPerClick * multiplier;
     updatePointsDisplay();
-    playClickSound();  // Play sound on click
 });
 
 // Function to buy upgrades
@@ -76,13 +75,9 @@ function startAutoClicker() {
     }, 1000);
 }
 
-// Function to play click sound (ensure you have the sound file)
-function playClickSound() {
-    const clickSound = new Audio('assets/click.mp3'); // Path to your sound file
-    clickSound.play();
-}
-
 // Reset the game function
+document.getElementById("reset-btn").addEventListener("click", resetGame);
+
 function resetGame() {
     points = 0;
     pointsPerClick = 1;
@@ -93,3 +88,4 @@ function resetGame() {
     updatePointsDisplay();
     document.getElementById("btn3").disabled = false; // Enable auto-clicker button again
     document.getElementById("cost3").innerText = 100; // Reset cost
+}
